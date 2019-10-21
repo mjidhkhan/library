@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Book;
+use App\Author;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -81,8 +82,6 @@ class BookManagementTest extends TestCase
     /** @test */
     public function a_book_can_be_deleted()
     {
-        $this->withoutExceptionHandling();
-
         $this->post('/books', [
             'title' => 'Laravel Up & Running',
              'author' => 'Mat Stuffar',
@@ -94,6 +93,23 @@ class BookManagementTest extends TestCase
 
         $this->assertCount(0, Book::all());
         $response->assertRedirect(('/books'));
+    }
+
+    /** @test */
+    public function a_new_author_is_automatically_added()
+    {
+         $this->withoutExceptionHandling();
+        $this->post('/books', [
+            'title' => 'Laravel Up & Running',
+             'author' => 'Mat Stuffar',
+        ]);
+
+        $book = Book::first();
+        $author = Author::first();
+
+        $this->assertEquals($author->id , $book->author_id);
+        $this->assertCount(1, Author::all());
+      
     }
     
     
