@@ -15,10 +15,7 @@ class BookManagementTest extends TestCase
     {
         //$this->withoutExceptionHandling();
 
-        $response = $this->post('/books', [
-            'title' => 'Laravel Up & Running',
-            'author' => 'Mat Stuffar'
-        ]);
+        $response = $this->post('/books', $this->data());
 
         $book = Book::first();
         //$response->assertOk();
@@ -47,12 +44,9 @@ class BookManagementTest extends TestCase
     {
         //$this->withoutExceptionHandling();
 
-        $response = $this->post('/books', [
-            'title' => 'Laravel Up & Running',
-            'author' => ''
-        ]);
+        $response = $this->post('/books', array_merge($this->data(), ['author_id' => '']));
 
-        $response->assertSessionHasErrors('author');
+        $response->assertSessionHasErrors('author_id');
     }
 
     /** @test */
@@ -61,19 +55,16 @@ class BookManagementTest extends TestCase
    
         $this->withoutExceptionHandling();
 
-        $this->post('/books', [
-            'title' => 'Laravel Up & Running',
-             'author' => 'Mat Stuffar',
-        ]);
+        $this->post('/books', $this->data());
 
         $book= Book::first();
         $response = $this->patch($book->path(),[
             'title' => 'New Title',
-             'author' => 'New Author',
+             'author_id' => 'New Author',
         ]);
 
         $this->assertEquals('New Title', Book::first()->title);
-        $this->assertEquals('New Author', Book::first()->author);
+        $this->assertEquals(2, Book::first()->author_id);
 
         // Redirect 
         $response->assertRedirect($book->fresh()->path());
@@ -82,10 +73,7 @@ class BookManagementTest extends TestCase
     /** @test */
     public function a_book_can_be_deleted()
     {
-        $this->post('/books', [
-            'title' => 'Laravel Up & Running',
-             'author' => 'Mat Stuffar',
-        ]);
+        $this->post('/books', $this->data());
 
         $book= Book::first();
         $this->assertCount(1, Book::all());
@@ -101,7 +89,7 @@ class BookManagementTest extends TestCase
          $this->withoutExceptionHandling();
         $this->post('/books', [
             'title' => 'Laravel Up & Running',
-             'author' => 'Mat Stuffar',
+             'author_id' => 'Mat Stuffar',
         ]);
 
         $book = Book::first();
@@ -112,6 +100,13 @@ class BookManagementTest extends TestCase
       
     }
     
+    protected function data()
+    {
+        return [
+            'title' => 'Laravel Up & Running',
+            'author_id' => 'Mat Stuffar'
+        ];
+    }
     
 
 }
