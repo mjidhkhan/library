@@ -49,7 +49,6 @@ class BookReservationsTest extends TestCase
         $this->expectException(\Exception::class);
         $book = factory(Book::class)->create();
         $user = factory(User::class)->create();
-        
 
         $book->checkin($user);
     }
