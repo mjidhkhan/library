@@ -19,7 +19,7 @@ Route::delete('/books/{book}', 'BooksController@destroy');
 
 // Author
 
-Route::post('/author', 'AuthorsController@store');
+Route::post('/authors', 'AuthorsController@store');
 
 // book checkout
 Route::post('/checkout/{book}', 'CheckoutBookController@store');
